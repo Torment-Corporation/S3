@@ -8,7 +8,9 @@ html
     meta(name='viewport', content='width=device-width, initial-scale=1')
     link(rel='stylesheet', href='/stylesheets/style.css')
     link(rel='stylesheet', href='https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css')
+    script(src="https://code.jquery.com/jquery-3.6.0.min.js")
 
   body
+    include partials/header
     block content
-    include script.pug
+    include partials/script
