@@ -27,10 +27,32 @@ socket.on("tweet", (tweet) => {
       </a>
       <div class="card-body">
         <p class="card-text line_break">${tweetData.text}</p>
-        <p class="card-text">${tweetData.source}</p>
-        <a class="btn btn-primary mt-3 mx-auto d-table px-5" target="_blank" href="https://twitter.com/${tweetData.username}/status/${tweetData.id}">Go</a>
+        <div class="text-center">
+          <a class="btn btn-main mt-3 px-3 me-1" data-bs-toggle="modal" data-bs-target="#see_more"><i class="fa-solid fa-magnifying-glass-plus"></i> ข้อมูลเพิ่มเติม</a>
+          <a class="btn btn-main mt-3 px-3 ms-1" target="_blank" href="https://twitter.com/${tweetData.username}/status/${tweetData.id}"><i class="fa-brands fa-twitter"></i> เข้าชมต้นฉบับ</a>
+        </div>
+      </div>
+    </div>
+    <div class="modal fade" id="see_more" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content bg-dark text_main">
+          <div class="modal-header">
+            <h4 class="modal-title">Modal Heading</h4>
+            <a type="button" class="fa-solid fa-xmark text_main" data-bs-dismiss="modal"></a>
+          </div>
+          <div class="modal-body">
+            <p class="card-text data_source">${tweetData.source}</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
       </div>
     </div>
   `;
   tweetStream.appendChild(tweetEl);
+  $("p.card-text.data_source:contains('Twitter for iPhone')").html("ใช้งานบน iPhone <i class='device_detect_icon fa-solid fa-mobile-screen-button'></i");
+  $("p.card-text.data_source:contains('Twitter for iPad')").html("ใช้งานบน iPad <i class='device_detect_icon fa-solid fa-tablet-screen-button'></i>");
+  $("p.card-text.data_source:contains('Twitter for Android')").html("ใช้งานบน Android <i class='device_detect_icon fa-brands fa-android'></i");
+  $("p.card-text.data_source:contains('Twitter Web App')").html("ใช้งานบน Website <i class='device_detect_icon fa-solid fa-computer'></i");
 });

@@ -22,6 +22,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/core', express.static(__dirname + '/node_modules/jquery/dist'));
 app.use('/core', express.static(__dirname + '/node_modules/bootstrap/dist'));
 app.use('/core', express.static(__dirname + '/node_modules/socket.io/client-dist'));
+app.use('/core', express.static(__dirname + '/node_modules/@fortawesome/fontawesome-free'));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);

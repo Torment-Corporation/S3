@@ -10,6 +10,11 @@ body {
   background-color: #191d20 !important;
 }
 
+.text_main {
+  color: #cdcdcd !important;
+  text-decoration: none;
+}
+
 .container.main_content {
   margin-top: 4rem;
 }
@@ -46,4 +51,18 @@ img.w-100 {
   font-size: 1rem;
   font-weight: bold;
   text-decoration: none;
+}
+
+.btn-main {
+  background-color: #3a3b3c !important;
+  border-color: #3a3b3c !important;
+  color: #cdcdcd !important;
+}
+
+.btn-main:focus, .btn-main:active {
+  box-shadow: 0 0 0 0.25rem rgb(60 60 60 / 50%) !important;
+}
+
+.device_detect_icon {
+  padding-left: 0.2rem !important;
 }
