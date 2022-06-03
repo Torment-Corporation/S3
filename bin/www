@@ -4,171 +4,170 @@
  * Module dependencies.
  */
 
- const app = require("../app");
- const debug = require("debug")("new:server");
- const http = require("http");
- const needle = require("needle");
- const config = require("dotenv").config();
- const TOKEN = process.env.TWITTER_BEARER_TOKEN;
- const socketIo = require("socket.io");
- 
- /**
-  * Get port from environment and store in Express.
-  */
- 
- const port = normalizePort(process.env.PORT || "3000");
- app.set("port", port);
- 
- /**
-  * Create HTTP server.
-  */
- 
- const server = http.createServer(app);
- const io = require("socket.io")(server);
- 
- const rulesURL = "https://api.twitter.com/2/tweets/search/stream/rules";
- const streamURL =
-   "https://api.twitter.com/2/tweets/search/stream?expansions=attachments.poll_ids,attachments.media_keys,author_id,entities.mentions.username,geo.place_id,in_reply_to_user_id,referenced_tweets.id,referenced_tweets.id.author_id&media.fields=duration_ms,height,media_key,preview_image_url,type,url,width,public_metrics,alt_text&place.fields=contained_within,country,country_code,full_name,geo,id,name,place_type&poll.fields=duration_minutes,end_datetime,id,options,voting_status&tweet.fields=attachments,author_id,context_annotations,conversation_id,created_at,entities,geo,id,in_reply_to_user_id,lang,public_metrics,possibly_sensitive,referenced_tweets,reply_settings,source,text,withheld&user.fields=created_at,description,entities,id,location,name,pinned_tweet_id,profile_image_url,protected,public_metrics,url,username,verified,withheld";
- 
- const rules = [{ value: "ขาย" }, { value: "sale" }];
- 
- async function getRules() {
-   const response = await needle("get", rulesURL, {
-     headers: {
-       Authorization: `Bearer ${TOKEN}`,
-     },
-   });
-   console.log(response.body);
-   return response.body;
- }
- async function setRules() {
-   const data = {
-     add: rules,
-   };
- 
-   const response = await needle("post", rulesURL, data, {
-     headers: {
-       "content-type": "application/json",
-       Authorization: `Bearer ${TOKEN}`,
-     },
-   });
- 
-   return response.body;
- }
- async function deleteRules(rules) {
-   if (!Array.isArray(rules.data)) {
-     return null;
-   }
- 
-   const ids = rules.data.map((rule) => rule.id);
- 
-   const data = {
-     delete: {
-       ids: ids,
-     },
-   };
- 
-   const response = await needle("post", rulesURL, data, {
-     headers: {
-       "content-type": "application/json",
-       Authorization: `Bearer ${TOKEN}`,
-     },
-   });
- 
-   return response.body;
- }
- function streamTweets(socket) {
-   const stream = needle.get(streamURL, {
-     headers: {
-       Authorization: `Bearer ${TOKEN}`,
-     },
-   });
- 
-   stream.on("data", (data) => {
-     try {
-       const json = JSON.parse(data);
-       // console.log(json);
-       socket.emit("tweet", json);
-     } catch (error) {}
-   });
- 
-   return stream;
- }
- io.on("connection", async () => {
-   console.log("Client Connected");
-   let currentRules;
-   try {
-     currentRules = await getRules();
-     await deleteRules(currentRules);
-     await setRules();
-   } catch (error) {
-     console.error(error);
-     process.exit(1);
-   }
-   streamTweets(io);
- });
- 
- /**
-  * Listen on provided port, on all network interfaces.
-  */
- 
- server.listen(port);
- server.on("error", onError);
- server.on("listening", onListening);
- 
- /**
-  * Normalize a port into a number, string, or false.
-  */
- 
- function normalizePort(val) {
-   const port = parseInt(val, 10);
- 
-   if (isNaN(port)) {
-     // named pipe
-     return val;
-   }
- 
-   if (port >= 0) {
-     // port number
-     return port;
-   }
- 
-   return false;
- }
- 
- /**
-  * Event listener for HTTP server "error" event.
-  */
- 
- function onError(error) {
-   if (error.syscall !== "listen") {
-     throw error;
-   }
- 
-   const bind = typeof port === "string" ? "Pipe " + port : "Port " + port;
- 
-   // handle specific listen errors with friendly messages
-   switch (error.code) {
-     case "EACCES":
-       console.error(bind + " requires elevated privileges");
-       process.exit(1);
-       break;
-     case "EADDRINUSE":
-       console.error(bind + " is already in use");
-       process.exit(1);
-       break;
-     default:
-       throw error;
-   }
- }
- 
- /**
-  * Event listener for HTTP server "listening" event.
-  */
- 
- function onListening() {
-   const addr = server.address();
-   const bind = typeof addr === "string" ? "pipe " + addr : "port " + addr.port;
-   debug("Listening on " + bind);
- }
- 
+const app = require("../app");
+const debug = require("debug")("new:server");
+const http = require("http");
+const needle = require("needle");
+const config = require("dotenv").config();
+const TOKEN = process.env.TWITTER_BEARER_TOKEN;
+const socketIo = require("socket.io");
+
+/**
+ * Get port from environment and store in Express.
+ */
+
+const port = normalizePort(process.env.PORT || "3000");
+app.set("port", port);
+
+/**
+ * Create HTTP server.
+ */
+
+const server = http.createServer(app);
+const io = require("socket.io")(server);
+
+const rulesURL = "https://api.twitter.com/2/tweets/search/stream/rules";
+const streamURL =
+  "https://api.twitter.com/2/tweets/search/stream?expansions=attachments.poll_ids,attachments.media_keys,author_id,entities.mentions.username,geo.place_id,in_reply_to_user_id,referenced_tweets.id,referenced_tweets.id.author_id&media.fields=duration_ms,height,media_key,preview_image_url,type,url,width,public_metrics,alt_text&place.fields=contained_within,country,country_code,full_name,geo,id,name,place_type&poll.fields=duration_minutes,end_datetime,id,options,voting_status&tweet.fields=attachments,author_id,context_annotations,conversation_id,created_at,entities,geo,id,in_reply_to_user_id,lang,public_metrics,possibly_sensitive,referenced_tweets,reply_settings,source,text,withheld&user.fields=created_at,description,entities,id,location,name,pinned_tweet_id,profile_image_url,protected,public_metrics,url,username,verified,withheld";
+
+const rules = [{ value: "ชัชชาติ has:images" }, { value: "เลือกตั้ง has:images" }];
+
+async function getRules() {
+  const response = await needle("get", rulesURL, {
+    headers: {
+      Authorization: `Bearer ${TOKEN}`,
+    },
+  });
+  console.log(response.body);
+  return response.body;
+}
+async function setRules() {
+  const data = {
+    add: rules,
+  };
+
+  const response = await needle("post", rulesURL, data, {
+    headers: {
+      "content-type": "application/json",
+      Authorization: `Bearer ${TOKEN}`,
+    },
+  });
+
+  return response.body;
+}
+async function deleteRules(rules) {
+  if (!Array.isArray(rules.data)) {
+    return null;
+  }
+
+  const ids = rules.data.map((rule) => rule.id);
+
+  const data = {
+    delete: {
+      ids: ids,
+    },
+  };
+
+  const response = await needle("post", rulesURL, data, {
+    headers: {
+      "content-type": "application/json",
+      Authorization: `Bearer ${TOKEN}`,
+    },
+  });
+
+  return response.body;
+}
+function streamTweets(socket) {
+  const stream = needle.get(streamURL, {
+    headers: {
+      Authorization: `Bearer ${TOKEN}`,
+    },
+  });
+
+  stream.on("data", (data) => {
+    try {
+      const json = JSON.parse(data);
+      // console.log(json);
+      socket.emit("tweet", json);
+    } catch (error) {}
+  });
+
+  return stream;
+}
+io.on("connection", async () => {
+  console.log("Client Connected");
+  let currentRules;
+  try {
+    currentRules = await getRules();
+    await deleteRules(currentRules);
+    await setRules();
+  } catch (error) {
+    console.error(error);
+    process.exit(1);
+  }
+  streamTweets(io);
+});
+
+/**
+ * Listen on provided port, on all network interfaces.
+ */
+
+server.listen(port);
+server.on("error", onError);
+server.on("listening", onListening);
+
+/**
+ * Normalize a port into a number, string, or false.
+ */
+
+function normalizePort(val) {
+  const port = parseInt(val, 10);
+
+  if (isNaN(port)) {
+    // named pipe
+    return val;
+  }
+
+  if (port >= 0) {
+    // port number
+    return port;
+  }
+
+  return false;
+}
+
+/**
+ * Event listener for HTTP server "error" event.
+ */
+
+function onError(error) {
+  if (error.syscall !== "listen") {
+    throw error;
+  }
+
+  const bind = typeof port === "string" ? "Pipe " + port : "Port " + port;
+
+  // handle specific listen errors with friendly messages
+  switch (error.code) {
+    case "EACCES":
+      console.error(bind + " requires elevated privileges");
+      process.exit(1);
+      break;
+    case "EADDRINUSE":
+      console.error(bind + " is already in use");
+      process.exit(1);
+      break;
+    default:
+      throw error;
+  }
+}
+
+/**
+ * Event listener for HTTP server "listening" event.
+ */
+
+function onListening() {
+  const addr = server.address();
+  const bind = typeof addr === "string" ? "pipe " + addr : "port " + addr.port;
+  debug("Listening on " + bind);
+}

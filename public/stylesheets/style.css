@@ -2,12 +2,16 @@ img.brand_site {
   width: 4rem;
 }
 
+* {
+  font-family: Kanit;
+}
+
 body {
   background-color: #191d20 !important;
 }
 
 .container.main_content {
-  margin-top: 5.5rem;
+  margin-top: 4rem;
 }
 
 ::-webkit-scrollbar {
@@ -21,4 +25,25 @@ body {
 }
 ::-webkit-scrollbar-thumb:hover {
   background: #181b1f;
+}
+
+img.w-100 {
+  height: 20rem;
+  object-fit: cover;
+}
+
+.line_break {
+  word-break: break-word;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.title_card {
+  color: #cdcdcd !important;
+  font-size: 1rem;
+  font-weight: bold;
+  text-decoration: none;
 }
