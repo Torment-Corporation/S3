@@ -11,7 +11,6 @@ const needle = require("needle");
 const config = require("dotenv").config();
 const TOKEN = process.env.TWITTER_BEARER_TOKEN;
 const socketIo = require("socket.io");
-
 /**
  * Get port from environment and store in Express.
  */

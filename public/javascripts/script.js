@@ -13,6 +13,7 @@ socket.on("tweet", (tweet) => {
     username: `@${tweet.includes.users[0].username}`,
     img_profile: `${tweet.includes.users[0].profile_image_url}`,
     img_content: `${tweet.includes.media[0].url}`,
+    created_at: tweet.data.created_at,
   };
   const tweetEl = document.createElement("div");
   tweetEl.className = "col-12 col-md-6 col-lg-4";
@@ -37,14 +38,22 @@ socket.on("tweet", (tweet) => {
       <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content bg-dark text_main">
           <div class="modal-header">
-            <h4 class="modal-title">Modal Heading</h4>
+            <h4 class="modal-title">ข้อมูลทั้งหมด</h4>
             <a type="button" class="fa-solid fa-xmark text_main" data-bs-dismiss="modal"></a>
           </div>
           <div class="modal-body">
-            <p class="card-text data_source">${tweetData.source}</p>
+            <ul class="list-group list-group-flush bg-dark text_main">
+              <li class="list-group-item">
+                <p class="card-text data_source">${tweetData.source}</p>
+              </li>
+              <li class="list-group-item">
+                <p class="card-text data_source"><i class="fa-regular fa-clock pe-2"></i> ${tweetData.created_at}</p>
+              </li>
+            </ul>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+          <a class="btn btn-main" target="_blank" href="https://twitter.com/${tweetData.username}/status/${tweetData.id}"><i class="fa-brands fa-twitter"></i> เข้าชมต้นฉบับ</a>
+            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">ปิด</button>
           </div>
         </div>
       </div>

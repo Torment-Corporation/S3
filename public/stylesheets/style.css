@@ -66,3 +66,16 @@ img.w-100 {
 .device_detect_icon {
   padding-left: 0.2rem !important;
 }
+
+.modal-header {
+  border-bottom: none !important;
+}
+
+.modal-footer {
+  border-top: none !important;
+}
+
+.bg-dark li {
+  background-color: #212529;
+  color: #cdcdcd !important;
+}
